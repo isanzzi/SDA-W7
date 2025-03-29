@@ -25,19 +25,22 @@ void Isi_Node(address *p, infotype nilai) {
 
 char* InsertTitle (){
     char *P = (char*) malloc (50 *sizeof(char));
-    if (P!=nil){
-        printf ("Insert title of song : ");
-        scanf (" %[^\n]s", P);
-        return P;
-    } else {
-        printf ("allocation title failed");
+    if (P == nil){
+        printf ("allocation title failed\n");
         return nil;
     }
+    printf ("input name : ");
+    scanf (" %[^\n]s", P);
+    return P;
 }
 
 address SetNode (infotype *nilai){
     address P;
     Create_Node (&P);
+    if (P == NULL) {
+        printf("Memory allocation failed\n");
+        return NULL;
+    }
     info(P) = *nilai;
     next(P) = nil;
     return P;
@@ -45,14 +48,19 @@ address SetNode (infotype *nilai){
 
 void Tampil_List(address p) {
     if (isEmpty(p)) {
-        printf("List Kosong\n");
+        printf("Empty List\n");
         return;
     }
-    while (p != nil) {
-        printf("%s -> ", info(p));
-        p = next(p);
+    
+    address temp = p;
+    while (temp != nil) {
+        printf("%s", info(temp));
+        if (next(temp) != nil) {
+            printf(" -> ");
+        }
+        temp = next(temp);
     }
-    printf("null\n");
+    printf("\n");
 }
 
 address Search(address p, infotype nilai) {

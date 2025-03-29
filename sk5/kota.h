@@ -9,5 +9,9 @@ typedef struct
     address knama; //pointer ke telmt list
 }kt;
 
+boolean isEmptykt (kt *p);
+boolean isCityInitialized(kt p);
+
+void Initkt (kt *p);
 
 #endif
