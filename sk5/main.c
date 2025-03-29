@@ -21,7 +21,8 @@ int main(){
         printf ("\n1. add/init city\n");
         printf ("2. add name in city\n");
         printf ("3. print name\n");
-        printf ("4. exit\n");
+        printf ("4. delete first name\n");
+        printf ("5. exit\n");
         printf ("input the number you choose : ");
 
         char menu;
@@ -129,6 +130,30 @@ int main(){
             break;
 
             case '4':
+                printf("\nWhich city number do you want to delete from (1-%d): ", jmlkota);
+                scanf("%d", &kotake);
+                kotake--; // Adjust index
+                if (kotake >= 0 && kotake < jmlkota) {
+                    if (!isCityInitialized(kota[kotake])) {
+                        printf("City not initialized\n");
+                    } else if (kota[kotake].knama == NULL) {
+                        printf("No names in this city\n");
+                    } else {
+                        printf("Current list: ");
+                        Tampil_List(kota[kotake].knama);
+                        infotype deleted;
+                        Del_Awal(&(kota[kotake].knama), &deleted);
+                        printf("Deleted name: %s\n", deleted);
+                        free(deleted); // Free the deleted name
+                        printf("Updated list: ");
+                        Tampil_List(kota[kotake].knama);
+                    }
+                } else {
+                    printf("Invalid city number. Please enter 1-%d\n", jmlkota);
+                }
+                break;
+
+            case '5':
                 i=0;
                 while (i<jmlkota){
                     if (kota[i].info != NULL) {
