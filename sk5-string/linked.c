@@ -18,24 +18,24 @@ void Create_Node(address *p) {
 
 void Isi_Node(address *p, infotype nilai) {
     if (*p != nil) {
-        strcpy(info(*p), nilai);
+        strcpy((*p)->info, nilai);
         next(*p) = nil;
     }
 }
 
-void InsertTitle(infotype dest) {
+void InsertTitle(infotype nilai) {  // Changed return type and added parameter
     printf("input name : ");
-    scanf(" %[^\n]s", dest);
+    scanf(" %[^\n]s", nilai);
 }
 
-address SetNode(infotype nilai) {
+address SetNode(infotype *nilai) {
     address P;
     Create_Node(&P);
     if (P == NULL) {
         printf("Memory allocation failed\n");
         return NULL;
     }
-    strcpy(info(P), nilai);
+    strcpy(info(P), *nilai);  // Copy array contents
     next(P) = nil;
     return P;
 }
@@ -59,7 +59,7 @@ void Tampil_List(address p) {
 
 address Search(address p, infotype nilai) {
     while (p != nil) {
-        if (info(p) == nilai) {
+        if (strcmp(info(p), nilai) == 0) { // Changed from direct comparison to strcmp
             return p;
         }
         p = next(p);
@@ -95,20 +95,20 @@ void InsertAfter(address *pBef, address PNew) {
     }
 }
 
-void Del_Awal(address *p, infotype X) {
+void Del_Awal(address *p, infotype *X) {
     if (!isEmpty(*p)) {
         address temp = *p;
-        strcpy(X, info(temp));
+        strcpy(*X, info(temp));  // Use strcpy for array copy
         *p = next(temp);
         free(temp);
     }
 }
 
-void Del_Akhir(address *p, infotype X) {
+void Del_Akhir(address *p, infotype *X) {
     if (isEmpty(*p)) return;
 
     if (next(*p) == nil) {
-        strcpy(X, info(*p));
+        strcpy(*X, info(*p));  // Use strcpy for array copy
         free(*p);
         *p = nil;
     } else {
@@ -116,18 +116,18 @@ void Del_Akhir(address *p, infotype X) {
         while (next(next(temp)) != nil) {
             temp = next(temp);
         }
-        strcpy(X, info(next(temp)));
+        strcpy(*X, info(next(temp)));  // Use strcpy for array copy
         free(next(temp));
         next(temp) = nil;
     }
 }
 
-void DeleteValue(address *p, infotype target, infotype X) {
+void DeleteValue(address *p, infotype target, infotype *X) {
     if (*p == nil) {
         return;
     }
 
-    if (strcmp(info(*p), target) == 0) {
+    if (strcmp(info(*p), target) == 0) {  // Changed comparison to strcmp
         Del_Awal(p, X);
         return;
     }
@@ -135,13 +135,13 @@ void DeleteValue(address *p, infotype target, infotype X) {
     address prev = *p;
     address temp = next(prev);
 
-    while (temp != nil && strcmp(info(temp), target) != 0) {
+    while (temp != nil && strcmp(info(temp), target) != 0) {  // Changed comparison to strcmp
         prev = temp;
         temp = next(temp);
     }
 
     if (temp != nil) {
-        strcpy(X, info(temp));
+        strcpy(*X, info(temp));  // Changed assignment to strcpy
         next(prev) = next(temp);
         free(temp);
     }
@@ -159,4 +159,10 @@ void DeAlokasi(address *p) {
 int NbElmt(address p) {
     if (p == nil) return 0;
     return 1 + NbElmt(next(p));
+}
+
+void ModifyString(infotype str) {
+    printf("Current string: %s\n", str);
+    printf("Input new string: ");
+    scanf(" %[^\n]s", str); // Langsung modify array tanpa perlu alokasi baru
 }
