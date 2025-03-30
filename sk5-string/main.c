@@ -18,11 +18,13 @@ int main(){
     }
 
     while (lanjut==true){
+        printf ("\nyou can add city from 1 to %d", jmlkota);
         printf ("\n1. add/init city\n");
         printf ("2. add name in city\n");
         printf ("3. print name\n");
         printf ("4. delete first name\n");
-        printf ("5. exit\n");
+        printf ("5. modify city name\n"); // Add new menu option
+        printf ("6. exit\n");
         printf ("input the number you choose : ");
 
         char menu;
@@ -35,13 +37,13 @@ int main(){
                 scanf("%d", &kotake);
                 if (kotake > 0 && kotake <= jmlkota) {
                     kotake--; // Adjust index
-                    char cityNameTemp[STRING_LENGTH];
-                    InsertTitle(cityNameTemp);
-                    strcpy(kota[kotake].cityName, cityNameTemp);
+                    infotype cityName;  // Use infotype array
+                    InsertTitle(cityName);  // Changed to pass array directly
+                    strcpy(kota[kotake].info, cityName);
                 } else {
                     printf("Invalid city number. Please enter 1-%d\n", jmlkota);
                 }
-                break;
+            break;
 
             case '2':
                 while (1) {
@@ -58,11 +60,11 @@ int main(){
                                 printf ("City not initialized. Please initialize city first\n");
                                 break;
                             }
-                            Tampil_List(kota[kotake].knama);
-                            char nama[STRING_LENGTH];
-                            InsertTitle(nama);
-                            address newNode = SetNode(nama);
-                            Ins_Awal(&(kota[kotake].knama), newNode);
+                            Tampil_List(kota[kotake].elekt);
+                            infotype name;  // Use infotype array
+                            InsertTitle(name);  // Changed to pass array directly
+                            address newNode = SetNode(&name);
+                            Ins_Awal(&(kota[kotake].elekt), newNode);
                         } else {
                             printf ("Invalid city number. Please enter 1-%d\n", jmlkota);
                         }
@@ -90,11 +92,13 @@ int main(){
                         if (kotake >= 0 && kotake < jmlkota){
                             if (!isCityInitialized(kota[kotake])) {
                                 printf("City not initialized\n");
-                            } else if (kota[kotake].knama == NULL) {
-                                printf("No names in this city\n");
                             } else {
-                                printf ("\nCity-%d (%s):", kotake+1, kota[kotake].cityName);
-                                Tampil_List(kota[kotake].knama);
+                                printf("\nCity-%d (%s):", kotake+1, kota[kotake].info);
+                                if (kota[kotake].elekt == nil) {
+                                    printf(" No names registered\n");
+                                } else {
+                                    Tampil_List(kota[kotake].elekt);
+                                }
                             }
                         } else {
                             printf ("Invalid city number\n");
@@ -104,11 +108,11 @@ int main(){
                         i=0;
                         while (i<jmlkota){
                             if (isCityInitialized(kota[i])){
-                                printf ("\nCity-%d (%s):", i+1, kota[i].cityName);
-                                if (kota[i].knama != NULL) {
-                                    Tampil_List(kota[i].knama);
-                                } else {
+                                printf("\nCity-%d (%s):", i+1, kota[i].info);
+                                if (kota[i].elekt == nil) {
                                     printf(" No names registered\n");
+                                } else {
+                                    Tampil_List(kota[i].elekt);
                                 }
                             }
                             i++;
@@ -133,16 +137,18 @@ int main(){
                 if (kotake >= 0 && kotake < jmlkota) {
                     if (!isCityInitialized(kota[kotake])) {
                         printf("City not initialized\n");
-                    } else if (kota[kotake].knama == NULL) {
+                    } else if (kota[kotake].info[0] != '\0'){ // Fixed: check first character instead of pointer
+                        printf ("name city - %s", kota[kotake].info);
+                    } else if (isEmpty(kota[kotake].elekt)) { // Changed from NULL check
                         printf("No names in this city\n");
                     } else {
                         printf("Current list: ");
-                        Tampil_List(kota[kotake].knama);
+                        Tampil_List(kota[kotake].elekt);
                         infotype deleted;
-                        Del_Awal(&(kota[kotake].knama), deleted);
+                        Del_Awal(&(kota[kotake].elekt), &deleted);
                         printf("Deleted name: %s\n", deleted);
                         printf("Updated list: ");
-                        Tampil_List(kota[kotake].knama);
+                        Tampil_List(kota[kotake].elekt);
                     }
                 } else {
                     printf("Invalid city number. Please enter 1-%d\n", jmlkota);
@@ -150,14 +156,27 @@ int main(){
                 break;
 
             case '5':
-                i = 0;
-                while (i < jmlkota) {
-                    DeAlokasi(&(kota[i].knama)); // Free only linked list
+                printf("\nWhich city to modify? (1-%d): ", jmlkota);
+                scanf("%d", &kotake);
+                kotake--;
+                if (kotake >= 0 && kotake < jmlkota) {
+                    if (!isCityInitialized(kota[kotake])) {
+                        printf("City not initialized\n");
+                    } else {
+                        ModifyString(kota[kotake].info);
+                    }
+                }
+                break;
+
+            case '6': // Changed from 5 to 6
+                i=0;
+                while (i<jmlkota){
+                    DeAlokasi(&(kota[i].elekt)); // Only need to free linked list
                     i++;
                 }
-                printf("dealokasi success\n");
+                printf ("dealokasi success\n");
                 lanjut = false;
-                break;
+            break;
 
             default :
             break;
