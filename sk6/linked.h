@@ -29,5 +29,6 @@ void Del_Akhir(address *p, infotype *X);
 void DeleteValue (address *p, infotype target, infotype *X);
 void DeAlokasi(address *p);
 int NbElmt(address p);
+void ModifyString(infotype *str);
 
 #endif

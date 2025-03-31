@@ -23,6 +23,15 @@ void Createkt (addrkt *k){
     *k = (addrkt) malloc (sizeof (kt));
 }
 
+void Addkt (addrkt *k, addrkt knew){
+    if (isEmptykt(*k)) {
+        *k = knew;
+    } else {
+        nextkt(knew) = *k;
+        *k = knew;
+    }
+}
+
 void Isikt (addrkt *k, infotype nilai){
     if (*k != nil){
         nm(*k)=nilai;

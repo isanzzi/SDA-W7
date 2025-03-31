@@ -166,3 +166,9 @@ int NbElmt(address p) {
     if (p == nil) return 0;
     return 1 + NbElmt(next(p));
 }
+
+void ModifyString(infotype *str) {
+    printf("Current string: %s\n", *str);
+    free(*str);  // Free old string
+    *str = InsertTitle();  // Allocate and assign new string
+}

@@ -10,9 +10,17 @@ typedef struct kota{
     addrkt nextkt;
 }kt;
 
+
+
+boolean isEmptynm (kt k);
+boolean isCityInitialized(kt k);
 boolean isEmptykt (kt *k);
-boolean isCityInitialized(kt p);
 
-void Initkt (kt *p);
+void Initkt (kt *k);
+void Createkt (addrkt *k);
+void Addkt (addrkt *k, addrkt knew);
+void Isikt (addrkt *k, infotype nilai);
+addrkt SetKota (infotype *nilai);
 
+void TampilKota (addrkt k);
 #endif
