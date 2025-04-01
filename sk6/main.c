@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "kota.h"
+#include "menu.h"
 
 int main(){
     boolean lanjut=true;
@@ -10,31 +11,27 @@ int main(){
     addrkt kota=nil;
 
     while (lanjut==true){
-        printf ("\n1. add/init city\n");
-        printf ("2. add name in city\n");
-        printf ("3. print name\n");
-        printf ("4. delete first name\n");
-        printf ("5. modify city name\n");
-        printf ("6. exit\n");
-        printf ("input the number you choose : ");
-
+        MainMenu ();
         char menu;
         scanf (" %c", &menu);
         getchar();
 
         switch (menu){
-            case '1':
+            case '1': //init city
+            {
                 addrkt new;
                 Createkt(&new);
                 Initkt(new);
                 Isikt (&new, InsertTitle());
-                    if (!isEmptykt(new)){
+                    if (!isCityInitialized(*new)){
                         printf ("input nama berhasil");
                     }
                 Addkt (&kota, new);
+                maxkota+=1;
             break;
+            }
 
-            case '2':
+            case '2': //add name
                 { 
                     while (1) {
                         printf("Add people? (y/n): ");
@@ -42,97 +39,88 @@ int main(){
                         getchar();
 
                         if (tambah=='y') {
-                            printf("\n1. add by number input");
-                            printf("\n2. add by search name");
-                            printf("\ninput your choice : ");
                             addrkt temp = kota; 
+                            Tampil_ListKota (temp);
+                            SearchOptions ();
                             char tambah2;
                             scanf(" %c", &tambah2);
                             switch (tambah2) {
-                                case '1':
-                                    {
-                                        i = 0;
-                                        scanf("%d", &kotake);
-                                        if (kotake >= 0) {
-                                            if (!isCityInitialized(*temp)) {
-                                                printf("City not initialized. Please initialize city first\n");
-                                                break;
-                                            }
-                                            while (i < kotake && temp != nil) {
-                                                temp = nextkt(temp);
-                                                i++;
-                                            }
-                                        } else {
-                                            printf("Invalid city number\n");
-                                        }
-                                    }
+                                case '1': {
+                                    temp = ByNumberInput (kota,maxkota);
                                     break;
-
-                                case '2':
-                                    {
-                                        char *cari = InsertTitle();
-                                        addrkt found = nil;
-                                        while (temp != nil) {
-                                            if (strcmp(temp->info, cari) == 0) {
-                                                found = temp;
-                                                printf("Data ditemukan!\n");
-                                                break;
-                                            }
-                                            temp = nextkt(temp);
-                                        }
-                                        if (found == nil) {
-                                            printf("data tidak ditemukan\n");
-                                        }
-                                        free(cari);
                                     }
+                                case '2': {
+                                    temp=BySearchKota (kota);
                                     break;
+                                    }
+                                default:
+                                    break;
+                            if (!isEmptykt(temp)){
+                                address new;
+                                PrintFirstLast();
+                                char tambah2;
+                                scanf (" %c", &tambah2);
+                                switch (tambah2) {
+                                    case '1':
+                                        Create_Node (&new);
+                                        Isi_Node (&new, InsertTitle());
+                                        Ins_Awal (&temp, new);
+                                        Tampil_List (temp->elekt);
+                                        break;
+                                    case'2':
+                                        Create_Node (&new);
+                                        Isi_Node (&new, InsertTitle());
+                                        Ins_Akhir (&temp, new);
+                                        Tampil_List (temp->elekt);
+                                        break;
+                                    default:
+                                        break;
+                                }
                             }
-                        } else if (tambah == 'n') {
+
+                        else if (tambah == 'n') {
                             break;
                         }
+                        }
+                    }
+                break;
                     }
                 }
-                break;
 
-            case '3':
+            case '3': //print name
+            {
             while (1){
-                printf ("\n1. print only in input city");
-                printf ("\n2. print entire city");
-                printf ("\n3. exit");
-                printf ("\ninput your choice : ");
+                PrintOptions();
                 char menu2;
                 scanf (" %c", &menu2);
                 getchar();
                 switch (menu2){
                     case '1' :
                     {
-                        printf ("Input which city you want to print : ");
-                        scanf("%d", &kotake);
-                        kotake--;
-                        addrkt temp =kota;
-                        i=0;
-                        if (kotake >= 0){
-                            if (!isCityInitialized(*temp)) {
-                                printf("City not initialized\n");
-                            } else if (temp->elekt->info == nil) {
-                                printf("No names in this city\n");
-                            } else {
-                                while (i<kotake){
-                                temp=nextkt(temp);
-                                }
-                                printf ("%s", temp->elekt->info);
-                            }
+                    addrkt temp=kota;
+                    Tampil_ListKota (temp);
+                    SearchOptions();
+                    char menu3;
+                    scanf (" %c", menu3);
+                    switch (menu3){
+                        case '1': {
+                            temp=ByNumberInput(temp, maxkota);
+                            break; }
+                        case '2':{
+                            temp=BySearchKota(temp);}
+                            break;
+                        default:
+                            break;
                         }
-                        else {
-                            printf ("Invalid city number\n");
-                        }
-                        break;
+                        Tampil_List(temp->elekt);
+                    }
                     case '2' :
-                        i=0;
-                        addrkt temp;
-                        while (i<maxkota){
+                    {
+                        i=1;
+                        addrkt temp=kota;
+                        while (i<=maxkota){
                             if (isCityInitialized(*temp)){
-                                printf ("\nCity-%d (%s):", i+1, temp->info);
+                                printf ("\nCity-%d (%s):", i, temp->info);
                                 if (temp->elekt != NULL) {
                                     Tampil_List(kota->elekt);
                                 } else {
@@ -142,64 +130,117 @@ int main(){
                             temp=nextkt(temp);
                         }
                         break;
-                    case '3' : 
+                    }
+                    case '3' : {
                         break;
-                    default:
+                    }
+                    default: {
                         printf ("Invalid option\n");
                         break;
-                }
-                if (menu2 == '3'){
+                    }
+                    if (menu2 == '3'){
                     break;
-                }
-            }
+                    }
+                } //switch
+            } //while
             break;
+            } //end case
 
-            case '4':
-                printf("\nWhich city number do you want to delete from (1-%d): ", maxkota);
-                scanf("%d", &kotake);
-                kotake--; 
-                if (kotake > 0) {
-                    if (!isCityInitialized(kota[kotake])) {
-                        printf("City not initialized\n");
-                    } else if (kota[kotake].info != nil && kota[kotake].elekt->info==nil){ // Fixed: check first character instead of pointer
-                        printf ("name city - %s", kota[kotake].info);
-                        printf ("but no name in this city");
-                    } else {
-                        printf("Current list: ");
-                        Tampil_List(kota[kotake].elekt);
-                        infotype deleted;
-                        Del_Awal(&(kota[kotake].elekt), &deleted);
-                        printf("Deleted name: %s\n", deleted);
-                        free(deleted); 
-                        printf("Updated list: ");
-                        Tampil_List(kota[kotake].elekt);
+            case '4': //delete name in city
+                { 
+                    while (1) {
+                        printf("Do you want to delete people from city? (y/n): ");
+                        scanf(" %c", &tambah);
+                        getchar();
+
+                        if (tambah=='y') {
+                            addrkt temp = kota; 
+                            Tampil_ListKota (temp);
+                            SearchOptions();
+                            char tambah2;
+                            scanf(" %c", &tambah2);
+                            switch (tambah2) {
+                                case '1':{
+                                    temp=ByNumberInput (temp, maxkota);
+                                    break; }
+                                case '2': {
+                                    temp=BySearchKota (temp);
+                                    break; }
+                                default:
+                                break;
+                            }
+                            if (!isEmptykt(temp)){
+                                PrintForDelete();
+                                infotype deleted;
+                                char tambah3;
+                                scanf (" %c", &tambah3);
+                                switch (tambah2) {
+                                    case '1':
+                                        Del_Awal (&(temp)->elekt, deleted);
+                                        printf ("name deleted is %s\n", deleted);
+                                        break;
+                                    case'2':
+                                        Del_Akhir (&(temp)->elekt, deleted);
+                                        printf ("name deleted is %s\n", deleted);
+                                    case '3':
+                                        char *searching=InsertTitle();
+                                        DeleteValue (&(temp)->elekt, searching, deleted);
+                                        printf ("name deleted is %s\n", deleted);
+                                    default:
+                                        break;
+                                }
+                            }
+                        }
+                        else if (tambah == 'n') {
+                            break;
+                        }
+
                     }
-                } else {
-                    printf("Invalid city number. Please enter 1-%d\n", jmlkota);
-                }
                 break;
-
-            case '5':
-                printf("\nWhich city to modify? (1-%d): ", jmlkota);
-                scanf("%d", &kotake);
-                kotake--;
-                if (kotake >= 0 && kotake < jmlkota) {
-                    if (!isCityInitialized(kota[kotake])) {
-                        printf("City not initialized\n");
-                    } else {
-                        ModifyString(kota[kotake].info);
-                    }
                 }
-                break;
 
-            case '6':
-                i=0;
-                while (i<jmlkota){
-                    if (kota[i].info != NULL) {
-                        free(kota[i].info);
+            case '5': //delete city
+                {
+                    while (1) {
+                        printf("Do you want to delete a city? (y/n): ");
+                        scanf(" %c", &tambah);
+                        getchar();
+
+                        if (tambah=='y') {
+                            addrkt temp = kota; 
+                            Tampil_ListKota (temp);
+                            SearchOptions();
+                            char tambah2;
+                            scanf(" %c", &tambah2);
+                            switch (tambah2) {
+                                case '1':{
+                                    temp=ByNumberInput (temp, maxkota);
+                                    break; }
+                                case '2': {
+                                    temp=BySearchKota (temp);
+                                    break; }
+                                default:
+                                break;
+                            }
+                            if (!isEmptykt(temp)){
+                                DeAlokasi(temp->elekt);
+                                DeAlokasiKota (temp);
+                            }
+                        }
+                        else if (tambah == 'n') {
+                            break;
+                        }
+
                     }
-                    DeAlokasi(&(kota[i].elekt));
-                    i++;
+                break;
+                }
+
+            case '6'://exit
+                while (!isEmptykt(kota)){
+                    while (!isEmpty(kota->elekt)){
+                    DeAlokasi(&(kota)->elekt);
+                    }
+                DeAlokasiKota(&kota);
                 }
                 printf ("dealokasi success\n");
                 lanjut = false;
@@ -209,5 +250,4 @@ int main(){
             break;
         }
     }
-}
 }

@@ -20,7 +20,11 @@ void Initkt (kt *k);
 void Createkt (addrkt *k);
 void Addkt (addrkt *k, addrkt knew);
 void Isikt (addrkt *k, infotype nilai);
+void Tampil_ListKota (addrkt k);
 addrkt SetKota (infotype *nilai);
+addrkt ByNumberInput(addrkt k, int maxkota);
+addrkt BySearchKota(addrkt k);
+void DeAlokasiKota(addrkt *k);
 
 void TampilKota (addrkt k);
 #endif

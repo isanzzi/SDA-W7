@@ -1,7 +1,6 @@
 #ifndef convention_H
 #define convention_H
 
-#define max_kota 20
 #define nil NULL
 
 #define true 1
