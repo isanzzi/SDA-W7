@@ -133,7 +133,7 @@ void DeleteValue(address *p, infotype target, infotype *X) {
         return;
     }
 
-    if (info(*p) == target) {
+    if (strcmp(info(*p), target) == 0) {
         Del_Awal(p, X);
         return;
     }
@@ -141,7 +141,7 @@ void DeleteValue(address *p, infotype target, infotype *X) {
     address prev = *p;
     address temp = next(prev);
 
-    while (temp != nil && info(temp) != target) {
+    while (temp != nil && strcmp(info(temp), target) != 0) {
         prev = temp;
         temp = next(temp);
     }
@@ -158,6 +158,9 @@ void DeAlokasi(address *p) {
     while (*p != nil) {
         temp = *p;
         *p = next(temp);
+        if (info(temp) != NULL) {
+            free(info(temp));
+        }
         free(temp);
     }
 }

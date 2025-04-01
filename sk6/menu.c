@@ -2,26 +2,26 @@
 #include "menu.h"
 
 void MainMenu (){
-        printf ("\n1. add/init city\n");
-        printf ("2. add name in city\n");
-        printf ("3. print name\n");
-        printf ("4. delete name in city\n");
-        printf ("5. delete city\n");
+        printf ("\n1. add city\n");
+        printf ("2. add people\n");
+        printf ("3. delete city\n");
+        printf ("4. delete people\n");
+        printf ("5. print city and name\n");
         printf ("6. exit\n");
         printf ("input the number you choose : ");
 }
 
 void SearchOptions(){
-    printf("\n1. by number input");
-    printf("\n2. by search kota name");
-    printf("\ninput your choice : ");
+    printf("\n1. by number input\n");
+    printf("2. by search kota name\n");
+    printf("input your choice : ");
 }
 
 void PrintOptions(){
-    printf ("\n1. print only in input city");
-    printf ("\n2. print entire city");
-    printf ("\n3. exit");
-    printf ("\ninput your choice : ");
+    printf ("\n1. print only in input city\n");
+    printf ("2. print entire city\n");
+    printf ("3. exit\n");
+    printf ("input your choice : ");
 }
 
 void PrintFirstLast(){
@@ -30,8 +30,9 @@ void PrintFirstLast(){
     printf ("input your choice: ");
 }
 
-void PrintForDelete (){
-    printf ("1. first\n");
-    printf ("2. last\n");
-    printf ("3. search name");
+void PrintForDelete(){
+    printf ("1. delete first\n");
+    printf ("2. delete last\n");
+    printf ("3. delete by name\n");
+    printf ("input your choice: ");
 }

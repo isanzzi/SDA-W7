@@ -13,10 +13,9 @@ boolean isEmptykt (kt *k){
 }
 
 void Initkt (kt *k){
-    nm(k)=nil;
-    nextkt(k)=nil;
-    k->elekt->info=nil;
-    k->elekt->next=nil;
+    k->info = nil;
+    k->nextkt = nil;
+    k->elekt = nil; // Inisialisasi elekt sebagai nil dulu
 }
 
 void Createkt (addrkt *k){
@@ -67,19 +66,23 @@ void TampilKota (addrkt k){
 
 void Tampil_ListKota (addrkt k){
     if (isEmptykt(k)){
-        printf ("empty list\n");
+        printf ("\nempty list\n");
         return;
     } 
     else if (isEmptynm(*k)) {
-        printf ("no people\n");
+        printf ("\nno people\n");
         return;
     } 
     else {
+        printf ("\n");
         addrkt temp=k;
         int i=0;
-        while (k!=nil){
-            printf ("city-%d (%s)", (i+1), nm(k));
+        while (temp!=nil){
+            printf ("city-%d (%s)\n", (i+1), nm(temp));
+            temp=nextkt(temp);
+            i++;
         }
+        printf ("\n");
     }
 }
 
@@ -126,9 +129,17 @@ addrkt BySearchKota(addrkt k) {
 
 void DeAlokasiKota(addrkt *k){
     addrkt temp;
-    while (*k !=nil){
-        temp=*k;
-        *k=nextkt(temp);
-        free (temp);
+    while (*k != nil){
+        temp = *k;
+        *k = nextkt(temp);
+        // Free infotype string sebelum membebaskan node
+        if (temp->info != NULL) {
+            free(temp->info);
+        }
+        // Dealokasi linked list elemen di dalam kota
+        if (temp->elekt != nil) {
+            DeAlokasi(&(temp->elekt));
+        }
+        free(temp);
     }
 }
