@@ -109,25 +109,26 @@ int main(){
                         
                         switch (tambah2) {
                             case '1':
-                                temp = ByNumberInput(temp, maxkota);
+                                {
+                                    int kotake;
+                                    printf("Masukkan nomor kota: ");
+                                    scanf("%d", &kotake);
+                                    
+                                    DeleteKotaByNumber(&kota, &maxkota, &kotake);
+                                }
                                 break;
                             case '2': 
-                                temp = BySearchKota(temp);
+                                {
+                                    char *cari = InsertTitle();
+                                    
+                                    DeleteKotaByName(&kota, &maxkota, cari);
+                                    
+                                    free(cari);
+                                }
                                 break;
                             default:
                                 printf("Invalid option\n");
                                 continue;
-                        }
-                        
-                        if (temp != nil && !isEmptykt(temp)){
-                            if (temp->elekt != nil) {
-                                DeAlokasi(&(temp->elekt));
-                            }
-                            DeAlokasiKota(&temp);
-                            maxkota--; // Decrease city count
-                            printf("City deleted successfully\n");
-                        } else {
-                            printf("City not found or not initialized\n");
                         }
                     } else if (tambah == 'n') {
                         break;
@@ -165,6 +166,11 @@ int main(){
                         }
                         
                         if (temp != nil && !isEmptykt(temp)){
+                            if (temp->elekt == nil || isEmpty(temp->elekt)) {
+                                printf("No people in this city\n");
+                                continue;
+                            }
+                            
                             PrintForDelete();
                             infotype deleted = NULL;
                             char tambah3;
@@ -176,6 +182,8 @@ int main(){
                                     if (deleted != NULL) {
                                         printf("Name deleted is %s\n", deleted);
                                         free(deleted);
+                                    } else {
+                                        printf("No people to delete\n");
                                     }
                                     break;
                                 case '2':
@@ -183,14 +191,36 @@ int main(){
                                     if (deleted != NULL) {
                                         printf("Name deleted is %s\n", deleted);
                                         free(deleted);
+                                    } else {
+                                        printf("No people to delete\n");
                                     }
                                     break;
                                 case '3':
                                     {
                                         char *searching = InsertTitle();
-                                        DeleteValue(&temp->elekt, searching, &deleted);
-                                        printf("Name deleted is %s\n", deleted);
-                                        free(deleted);
+                                        // Periksa terlebih dahulu apakah nama ada dalam list
+                                        address find = temp->elekt;
+                                        boolean nameFound = false;
+                                        
+                                        while (find != nil && !nameFound) {
+                                            if (strcmp(info(find), searching) == 0) {
+                                                nameFound = true;
+                                            }
+                                            find = next(find);
+                                        }
+                                        
+                                        if (nameFound) {
+                                            DeleteValue(&temp->elekt, searching, &deleted);
+                                            if (deleted != NULL) {
+                                                printf("Name deleted is %s\n", deleted);
+                                                free(deleted);
+                                            } else {
+                                                printf("Error deleting name\n");
+                                            }
+                                        } else {
+                                            printf("Name not found in this city\n");
+                                        }
+                                        
                                         free(searching);
                                     }
                                     break;

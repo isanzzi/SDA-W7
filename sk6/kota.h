@@ -24,7 +24,9 @@ void Tampil_ListKota (addrkt k);
 addrkt SetKota (infotype *nilai);
 addrkt ByNumberInput(addrkt k, int maxkota);
 addrkt BySearchKota(addrkt k);
-void DeAlokasiKota(addrkt *k);
+void DeleteKotaByNumber(addrkt *k, int *maxkota, int *kotake);
+void DeleteKotaByName(addrkt *k, int *maxkota, char *nama);
 
 void TampilKota (addrkt k);
+void DeAlokasiKota(addrkt *k);
 #endif

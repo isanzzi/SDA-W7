@@ -143,3 +143,110 @@ void DeAlokasiKota(addrkt *k){
         free(temp);
     }
 }
+
+void DeleteKotaByNumber(addrkt *k, int *maxkota, int *kotake) {
+    if (*k == nil) {
+        printf("Tidak ada kota yang tersedia\n");
+        return;
+    }
+    
+    if (*kotake <= 0 || *kotake > *maxkota) {
+        printf("Nomor kota tidak valid\n");
+        return;
+    }
+    
+    // Cari kota yang akan dihapus
+    addrkt current = *k;
+    addrkt prev = nil;
+    int i = 1;
+    
+    while (i < *kotake && current != nil) {
+        prev = current;
+        current = nextkt(current);
+        i++;
+    }
+    
+    if (current == nil) {
+        printf("Kota tidak ditemukan\n");
+        return;
+    }
+    
+    // Hapus kota dari linked list
+    if (prev == nil) {
+        // Hapus kota pertama
+        *k = nextkt(current);
+    } else {
+        // Hapus kota di tengah/akhir
+        nextkt(prev) = nextkt(current);
+    }
+    
+    // Dealokasi elemen dalam kota
+    if (current->elekt != nil) {
+        DeAlokasi(&(current->elekt));
+    }
+    
+    // Bebaskan info kota
+    if (current->info != NULL) {
+        free(current->info);
+    }
+    
+    // Bebaskan struktur kota
+    free(current);
+    
+    // Kurangi jumlah kota
+    (*maxkota)--;
+    
+    printf("Kota berhasil dihapus\n");
+}
+
+void DeleteKotaByName(addrkt *k, int *maxkota, char *nama) {
+    if (*k == nil) {
+        printf("Tidak ada kota yang tersedia\n");
+        return;
+    }
+    
+    addrkt current = *k;
+    addrkt prev = nil;
+    boolean found = false;
+    
+    while (current != nil && !found) {
+        if (strcmp(current->info, nama) == 0) {
+            found = true;
+        } else {
+            prev = current;
+            current = nextkt(current);
+        }
+    }
+    
+    if (!found) {
+        printf("Kota tidak ditemukan\n");
+        return;
+    }
+    
+    // Hapus kota dari linked list
+    if (prev == nil) {
+        // Hapus kota pertama
+        *k = nextkt(current);
+    } else {
+        // Hapus kota di tengah/akhir
+        nextkt(prev) = nextkt(current);
+    }
+    
+    // Dealokasi elemen dalam kota
+    if (current->elekt != nil) {
+        DeAlokasi(&(current->elekt));
+    }
+    
+    // Bebaskan info kota
+    if (current->info != NULL) {
+        free(current->info);
+    }
+    
+    // Bebaskan struktur kota
+    free(current);
+    
+    // Kurangi jumlah kota
+    (*maxkota)--;
+    
+    printf("Kota %s berhasil dihapus\n", nama);
+}
